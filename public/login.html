@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Certificate Verification System</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/web3@1.5.2/dist/web3.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="login-form">
+            <h2>Login</h2>
+            <div class="connection-status">
+                <div id="message" class="message"></div>
+                <div class="connection-buttons">
+                    <button id="connectMetaMask" class="btn btn-primary" style="display: none; width: 100%; margin-bottom: 10px;">
+                        Connect MetaMask
+                    </button>
+                    <button id="reconnectMetaMask" class="btn btn-secondary" style="display: none; width: 100%; margin-bottom: 10px;">
+                        Retry Connection
+                    </button>
+                </div>
+            </div>
+            
+            <form id="loginForm" style="display: none;">
+                <div class="form-group">
+                    <label for="username">Username:</label>
+                    <input type="text" id="username" name="username" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password:</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+                <button type="submit" class="btn">Login</button>
+            </form>
+            <p style="margin-top: 20px; text-align: center;">
+                Don't have an account? <a href="/register.html">Register here</a>
+            </p>
+        </div>
+    </div>
+    <script src="login.js"></script>
+</body>
+</html> 

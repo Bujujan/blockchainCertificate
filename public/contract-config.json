@@ -1,0 +1,524 @@
+{
+  "userManagementAddress": "0x5FbDB2315678afecb367f032d93F642f64180aa3",
+  "certificateAddress": "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512",
+  "userManagementABI": [
+    {
+      "type": "constructor",
+      "payable": false,
+      "inputs": []
+    },
+    {
+      "type": "event",
+      "anonymous": false,
+      "name": "UserRegistered",
+      "inputs": [
+        {
+          "type": "address",
+          "name": "userAddress",
+          "indexed": false
+        },
+        {
+          "type": "string",
+          "name": "username",
+          "indexed": false
+        },
+        {
+          "type": "uint8",
+          "name": "role",
+          "indexed": false
+        }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "getUserRole",
+      "constant": true,
+      "stateMutability": "view",
+      "payable": false,
+      "inputs": [
+        {
+          "type": "address",
+          "name": "userAddress"
+        }
+      ],
+      "outputs": [
+        {
+          "type": "uint8",
+          "name": ""
+        }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "login",
+      "constant": true,
+      "stateMutability": "view",
+      "payable": false,
+      "inputs": [
+        {
+          "type": "string",
+          "name": "passwordHash"
+        }
+      ],
+      "outputs": [
+        {
+          "type": "bool",
+          "name": "success"
+        },
+        {
+          "type": "uint8",
+          "name": "userRole"
+        }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "owner",
+      "constant": true,
+      "stateMutability": "view",
+      "payable": false,
+      "inputs": [],
+      "outputs": [
+        {
+          "type": "address",
+          "name": ""
+        }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "registerUser",
+      "constant": false,
+      "payable": false,
+      "inputs": [
+        {
+          "type": "address",
+          "name": "userAddress"
+        },
+        {
+          "type": "string",
+          "name": "username"
+        },
+        {
+          "type": "string",
+          "name": "passwordHash"
+        },
+        {
+          "type": "uint8",
+          "name": "role"
+        }
+      ],
+      "outputs": []
+    },
+    {
+      "type": "function",
+      "name": "users",
+      "constant": true,
+      "stateMutability": "view",
+      "payable": false,
+      "inputs": [
+        {
+          "type": "address",
+          "name": ""
+        }
+      ],
+      "outputs": [
+        {
+          "type": "string",
+          "name": "username"
+        },
+        {
+          "type": "string",
+          "name": "passwordHash"
+        },
+        {
+          "type": "uint8",
+          "name": "role"
+        },
+        {
+          "type": "bool",
+          "name": "exists"
+        }
+      ]
+    }
+  ],
+  "certificateABI": [
+    {
+      "type": "constructor",
+      "payable": false,
+      "inputs": [
+        {
+          "type": "address",
+          "name": "_userManagementAddress"
+        }
+      ]
+    },
+    {
+      "type": "event",
+      "anonymous": false,
+      "name": "CertificateIssued",
+      "inputs": [
+        {
+          "type": "string",
+          "name": "certificateId",
+          "indexed": false
+        },
+        {
+          "type": "string",
+          "name": "studentName",
+          "indexed": false
+        },
+        {
+          "type": "string",
+          "name": "courseName",
+          "indexed": false
+        },
+        {
+          "type": "uint256",
+          "name": "issueDate",
+          "indexed": false
+        },
+        {
+          "type": "string",
+          "name": "ipfsHash",
+          "indexed": false
+        },
+        {
+          "type": "address",
+          "name": "studentAddress",
+          "indexed": false
+        }
+      ]
+    },
+    {
+      "type": "event",
+      "anonymous": false,
+      "name": "CertificateVerified",
+      "inputs": [
+        {
+          "type": "string",
+          "name": "certificateId",
+          "indexed": false
+        },
+        {
+          "type": "bool",
+          "name": "isApproved",
+          "indexed": false
+        }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "certificates",
+      "constant": true,
+      "stateMutability": "view",
+      "payable": false,
+      "inputs": [
+        {
+          "type": "string",
+          "name": ""
+        }
+      ],
+      "outputs": [
+        {
+          "type": "string",
+          "name": "studentName"
+        },
+        {
+          "type": "string",
+          "name": "courseName"
+        },
+        {
+          "type": "uint256",
+          "name": "issueDate"
+        },
+        {
+          "type": "string",
+          "name": "certificateId"
+        },
+        {
+          "type": "string",
+          "name": "ipfsHash"
+        },
+        {
+          "type": "bool",
+          "name": "isVerified"
+        },
+        {
+          "type": "bool",
+          "name": "isRejected"
+        },
+        {
+          "type": "address",
+          "name": "studentAddress"
+        }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "getCertificate",
+      "constant": true,
+      "stateMutability": "view",
+      "payable": false,
+      "inputs": [
+        {
+          "type": "string",
+          "name": "certificateId"
+        }
+      ],
+      "outputs": [
+        {
+          "type": "tuple",
+          "name": "",
+          "components": [
+            {
+              "type": "string",
+              "name": "studentName"
+            },
+            {
+              "type": "string",
+              "name": "courseName"
+            },
+            {
+              "type": "uint256",
+              "name": "issueDate"
+            },
+            {
+              "type": "string",
+              "name": "certificateId"
+            },
+            {
+              "type": "string",
+              "name": "ipfsHash"
+            },
+            {
+              "type": "bool",
+              "name": "isVerified"
+            },
+            {
+              "type": "bool",
+              "name": "isRejected"
+            },
+            {
+              "type": "address",
+              "name": "studentAddress"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "getCertificatesByStudent",
+      "constant": true,
+      "stateMutability": "view",
+      "payable": false,
+      "inputs": [
+        {
+          "type": "address",
+          "name": "student"
+        }
+      ],
+      "outputs": [
+        {
+          "type": "tuple[]",
+          "name": "",
+          "components": [
+            {
+              "type": "string",
+              "name": "studentName"
+            },
+            {
+              "type": "string",
+              "name": "courseName"
+            },
+            {
+              "type": "uint256",
+              "name": "issueDate"
+            },
+            {
+              "type": "string",
+              "name": "certificateId"
+            },
+            {
+              "type": "string",
+              "name": "ipfsHash"
+            },
+            {
+              "type": "bool",
+              "name": "isVerified"
+            },
+            {
+              "type": "bool",
+              "name": "isRejected"
+            },
+            {
+              "type": "address",
+              "name": "studentAddress"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "getPendingCertificates",
+      "constant": true,
+      "stateMutability": "view",
+      "payable": false,
+      "inputs": [],
+      "outputs": [
+        {
+          "type": "tuple[]",
+          "name": "",
+          "components": [
+            {
+              "type": "string",
+              "name": "studentName"
+            },
+            {
+              "type": "string",
+              "name": "courseName"
+            },
+            {
+              "type": "uint256",
+              "name": "issueDate"
+            },
+            {
+              "type": "string",
+              "name": "certificateId"
+            },
+            {
+              "type": "string",
+              "name": "ipfsHash"
+            },
+            {
+              "type": "bool",
+              "name": "isVerified"
+            },
+            {
+              "type": "bool",
+              "name": "isRejected"
+            },
+            {
+              "type": "address",
+              "name": "studentAddress"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "issueCertificate",
+      "constant": false,
+      "payable": false,
+      "inputs": [
+        {
+          "type": "string",
+          "name": "courseName"
+        },
+        {
+          "type": "string",
+          "name": "certificateId"
+        },
+        {
+          "type": "uint256",
+          "name": "issueDate"
+        },
+        {
+          "type": "string",
+          "name": "ipfsHash"
+        }
+      ],
+      "outputs": []
+    },
+    {
+      "type": "function",
+      "name": "owner",
+      "constant": true,
+      "stateMutability": "view",
+      "payable": false,
+      "inputs": [],
+      "outputs": [
+        {
+          "type": "address",
+          "name": ""
+        }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "pendingCertificates",
+      "constant": true,
+      "stateMutability": "view",
+      "payable": false,
+      "inputs": [
+        {
+          "type": "uint256",
+          "name": ""
+        }
+      ],
+      "outputs": [
+        {
+          "type": "string",
+          "name": ""
+        }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "studentCertificates",
+      "constant": true,
+      "stateMutability": "view",
+      "payable": false,
+      "inputs": [
+        {
+          "type": "address",
+          "name": ""
+        },
+        {
+          "type": "uint256",
+          "name": ""
+        }
+      ],
+      "outputs": [
+        {
+          "type": "string",
+          "name": ""
+        }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "userManagement",
+      "constant": true,
+      "stateMutability": "view",
+      "payable": false,
+      "inputs": [],
+      "outputs": [
+        {
+          "type": "address",
+          "name": ""
+        }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "verifyCertificate",
+      "constant": false,
+      "payable": false,
+      "inputs": [
+        {
+          "type": "string",
+          "name": "certificateId"
+        },
+        {
+          "type": "bool",
+          "name": "isApproved"
+        }
+      ],
+      "outputs": []
+    }
+  ]
+}

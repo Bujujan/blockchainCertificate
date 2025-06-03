@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard - Issue Certificate</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/web3@1.5.2/dist/web3.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <nav class="navbar">
+            <h1>Student Dashboard</h1>
+            <button onclick="logout()" class="btn">Logout</button>
+        </nav>
+        
+        <div class="main-content">
+            <h2>Issue New Certificate</h2>
+            <form id="issueCertificateForm">
+                <div class="form-group">
+                    <label for="courseName">Course Name:</label>
+                    <input type="text" id="courseName" name="courseName" required>
+                </div>
+                <div class="form-group">
+                    <label for="certificateFile">Upload Certificate (PDF):</label>
+                    <input type="file" id="certificateFile" name="certificateFile" accept=".pdf" required>
+                </div>
+                <button type="submit" class="btn">Submit for Verification</button>
+            </form>
+            <div id="message" class="message"></div>
+            
+            <div class="certificate-list">
+                <h3>My Certificates</h3>
+                <div id="certificatesList"></div>
+            </div>
+        </div>
+    </div>
+    <script src="student.js"></script>
+</body>
+</html> 

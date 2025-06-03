@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teacher Dashboard - Certificate Verification</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/web3@1.5.2/dist/web3.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <nav class="navbar">
+            <h1>Teacher Dashboard</h1>
+            <button onclick="logout()" class="btn">Logout</button>
+        </nav>
+        
+        <div class="main-content">
+            <h2>Pending Certificates</h2>
+            <div id="pendingCertificates" class="certificate-grid">
+                <!-- Certificates will be loaded here dynamically -->
+            </div>
+            
+            <div id="certificateDetails" class="certificate-details" style="display: none;">
+                <h3>Certificate Details</h3>
+                <div class="details-content">
+                    <p><strong>Student Name:</strong> <span id="studentName"></span></p>
+                    <p><strong>Course Name:</strong> <span id="courseName"></span></p>
+                    <p><strong>Submission Date:</strong> <span id="submissionDate"></span></p>
+                    <iframe id="certificatePreview" class="certificate-preview"></iframe>
+                    <div class="action-buttons">
+                        <button onclick="verifyCertificate(true)" class="btn btn-success">Accept</button>
+                        <button onclick="verifyCertificate(false)" class="btn btn-danger">Reject</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="teacher.js"></script>
+</body>
+</html> 

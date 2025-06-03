@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - Certificate Verification System</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/web3@1.5.2/dist/web3.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="login-form">
+            <h2>Register</h2>
+            <div id="message" class="message"></div>
+            
+            <button id="connectMetaMask" class="btn btn-primary" style="display: none; width: 100%; margin-bottom: 10px;">
+                Connect MetaMask
+            </button>
+            
+            <form id="registerForm" style="display: none;">
+                <div class="form-group">
+                    <label for="username">Username:</label>
+                    <input type="text" id="username" name="username" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password:</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+                <div class="form-group">
+                    <label for="role">Role:</label>
+                    <select id="role" name="role" required>
+                        <option value="0">Student</option>
+                        <option value="1">Teacher</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn">Register</button>
+            </form>
+            <p style="margin-top: 20px; text-align: center;">
+                Already have an account? <a href="/login.html">Login here</a>
+            </p>
+        </div>
+    </div>
+    <script src="register.js"></script>
+</body>
+</html> 
