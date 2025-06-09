@@ -43,8 +43,7 @@
       ],
       "outputs": [
         {
-          "type": "uint8",
-          "name": ""
+          "type": "uint8"
         }
       ]
     },
@@ -80,8 +79,7 @@
       "inputs": [],
       "outputs": [
         {
-          "type": "address",
-          "name": ""
+          "type": "address"
         }
       ]
     },
@@ -118,8 +116,7 @@
       "payable": false,
       "inputs": [
         {
-          "type": "address",
-          "name": ""
+          "type": "address"
         }
       ],
       "outputs": [
@@ -215,8 +212,7 @@
       "payable": false,
       "inputs": [
         {
-          "type": "string",
-          "name": ""
+          "type": "string"
         }
       ],
       "outputs": [
@@ -269,7 +265,6 @@
       "outputs": [
         {
           "type": "tuple",
-          "name": "",
           "components": [
             {
               "type": "string",
@@ -322,7 +317,6 @@
       "outputs": [
         {
           "type": "tuple[]",
-          "name": "",
           "components": [
             {
               "type": "string",
@@ -370,7 +364,6 @@
       "outputs": [
         {
           "type": "tuple[]",
-          "name": "",
           "components": [
             {
               "type": "string",
@@ -442,8 +435,7 @@
       "inputs": [],
       "outputs": [
         {
-          "type": "address",
-          "name": ""
+          "type": "address"
         }
       ]
     },
@@ -455,14 +447,12 @@
       "payable": false,
       "inputs": [
         {
-          "type": "uint256",
-          "name": ""
+          "type": "uint256"
         }
       ],
       "outputs": [
         {
-          "type": "string",
-          "name": ""
+          "type": "string"
         }
       ]
     },
@@ -474,18 +464,15 @@
       "payable": false,
       "inputs": [
         {
-          "type": "address",
-          "name": ""
+          "type": "address"
         },
         {
-          "type": "uint256",
-          "name": ""
+          "type": "uint256"
         }
       ],
       "outputs": [
         {
-          "type": "string",
-          "name": ""
+          "type": "string"
         }
       ]
     },
@@ -498,8 +485,7 @@
       "inputs": [],
       "outputs": [
         {
-          "type": "address",
-          "name": ""
+          "type": "address"
         }
       ]
     },

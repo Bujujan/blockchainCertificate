@@ -14,6 +14,9 @@ const HARDHAT_NETWORK = {
     rpcUrls: ['http://127.0.0.1:8545']
 };
 
+
+
+
 // Helper function to hash passwords consistently
 function hashPassword(password) {
     return web3.utils.keccak256(web3.utils.utf8ToHex(password));
@@ -53,6 +56,102 @@ async function checkAndSwitchNetwork() {
     }
 }
 
+async function checkContractDeployment(contractAddress) {
+    try {
+        const code = await web3.eth.getCode(contractAddress);
+        if (code === '0x' || code === '0x0') {
+            console.error('No contract code found at address:', contractAddress);
+            return false;
+        }
+        console.log('Contract code found at address:', contractAddress);
+        console.log('Code length:', code.length);
+        return true;
+    } catch (error) {
+        console.error('Error checking contract deployment:', error);
+        return false;
+    }
+}
+
+async function validateABI(abi) {
+    try {
+        if (!Array.isArray(abi)) {
+            console.error('ABI is not an array:', typeof abi);
+            return false;
+        }
+        
+        // Check if ABI has required structure
+        for (let i = 0; i < abi.length; i++) {
+            const item = abi[i];
+            if (!item.type) {
+                console.error(ABI item ${i} missing type:, item);
+                return false;
+            }
+            
+            // Check for common malformed data
+            if (typeof item.type !== 'string') {
+                console.error(ABI item ${i} has invalid type:, item.type);
+                return false;
+            }
+        }
+        
+        console.log('ABI validation passed');
+        return true;
+    } catch (error) {
+        console.error('ABI validation error:', error);
+        return false;
+    }
+}
+
+async function initializeContract(config) {
+    try {
+        console.log('Initializing contract with config:', {
+            address: config.userManagementAddress,
+            abiLength: config.userManagementABI?.length
+        });
+
+        // Validate ABI first
+        if (!await validateABI(config.userManagementABI)) {
+            throw new Error('Invalid ABI structure');
+        }
+
+        // Log the ABI structure for debugging
+        console.log('ABI functions:', config.userManagementABI.map(item => ({
+            name: item.name,
+            type: item.type,
+            inputs: item.inputs?.length || 0
+        })));
+
+        // Initialize contract with validated ABI
+        userManagementContract = new web3.eth.Contract(
+            config.userManagementABI, 
+            config.userManagementAddress
+        );
+
+        // Test with a simple call first
+        console.log('Testing contract connection...');
+        const accounts = await web3.eth.getAccounts();
+        const currentAccount = accounts[0];
+        
+        // Try calling the users mapping - this should be the safest test
+        console.log('Calling users mapping for account:', currentAccount);
+        const userInfo = await userManagementContract.methods.users(currentAccount).call();
+        console.log('✓ Contract connection successful. User info:', userInfo);
+        
+        return true;
+    } catch (error) {
+        console.error('Contract initialization failed:', error);
+        
+        // More specific error handling
+        if (error.message.includes('invalid type')) {
+            throw new Error('ABI format error. Please redeploy the contract with a fresh ABI.');
+        } else if (error.message.includes('revert')) {
+            throw new Error('Contract call reverted. Check if the contract is properly deployed.');
+        } else {
+            throw new Error(Contract initialization failed: ${error.message});
+        }
+    }
+}
+
 async function checkMetaMaskConnection() {
     const messageDiv = document.getElementById('message');
     const loginForm = document.getElementById('loginForm');
@@ -86,33 +185,32 @@ async function checkMetaMaskConnection() {
                 web3 = new Web3(window.ethereum);
                 
                 // Load contract configuration
+                console.log('Loading contract configuration...');
                 const response = await fetch('/contract-config.json');
                 if (!response.ok) {
-                    throw new Error(`Failed to load contract config: ${response.status}`);
+                    throw new Error(Failed to load contract config: ${response.status});
                 }
                 
                 const config = await response.json();
-                console.log('Loaded contract config:', config);
+                console.log('Loaded contract config successfully');
                 
-                // Validate ABI structure
+                // Validate configuration
                 if (!config.userManagementABI || !Array.isArray(config.userManagementABI)) {
                     throw new Error('Invalid ABI structure in contract config');
                 }
                 
-                // Initialize contract with proper error handling
-                userManagementContract = new web3.eth.Contract(
-                    config.userManagementABI, 
-                    config.userManagementAddress
-                );
-                
-                // Test contract connection
-                try {
-                    const owner = await userManagementContract.methods.owner().call();
-                    console.log('Contract owner (test call):', owner);
-                } catch (testError) {
-                    console.error('Contract test call failed:', testError);
-                    throw new Error('Contract not properly deployed or network issue');
+                if (!config.userManagementAddress) {
+                    throw new Error('Missing contract address in config');
                 }
+                
+                // Check if contract is deployed
+                const isDeployed = await checkContractDeployment(config.userManagementAddress);
+                if (!isDeployed) {
+                    throw new Error(Contract not deployed at address: ${config.userManagementAddress});
+                }
+                
+                // Initialize contract
+                await initializeContract(config);
                 
                 isMetaMaskConnected = true;
                 messageDiv.textContent = 'MetaMask Connected to Hardhat Network';
@@ -122,7 +220,7 @@ async function checkMetaMaskConnection() {
                 
             } catch (error) {
                 console.error('Error initializing Web3:', error);
-                messageDiv.textContent = `Error: ${error.message}`;
+                messageDiv.textContent = Error: ${error.message};
                 messageDiv.className = 'message error';
                 reconnectButton.style.display = 'block';
                 loginForm.style.display = 'none';
@@ -179,91 +277,6 @@ async function reconnectMetaMask() {
     }
 }
 
-// Comprehensive debug function
-async function debugContract() {
-    try {
-        console.log('=== COMPREHENSIVE CONTRACT DEBUG ===');
-        
-        if (!web3) {
-            console.error('Web3 not initialized');
-            return;
-        }
-        
-        if (!userManagementContract) {
-            console.error('Contract not initialized');
-            return;
-        }
-        
-        // 1. Basic contract info
-        console.log('Contract address:', userManagementContract.options.address);
-        console.log('Web3 version:', web3.version);
-        
-        // 2. Test network connection
-        const networkId = await web3.eth.net.getId();
-        console.log('Network ID:', networkId);
-        
-        const blockNumber = await web3.eth.getBlockNumber();
-        console.log('Latest block:', blockNumber);
-        
-        // 3. Get accounts
-        const accounts = await web3.eth.getAccounts();
-        console.log('Available accounts:', accounts);
-        const selectedAccount = accounts[0];
-        
-        // 4. Test contract methods
-        console.log('\n=== TESTING CONTRACT METHODS ===');
-        
-        // Test owner method
-        try {
-            const owner = await userManagementContract.methods.owner().call();
-            console.log('✓ Owner method works:', owner);
-        } catch (error) {
-            console.error('✗ Owner method failed:', error.message);
-        }
-        
-        // Test getUserRole method
-        try {
-            console.log('Testing getUserRole with account:', selectedAccount);
-            const userRole = await userManagementContract.methods.getUserRole(selectedAccount).call();
-            console.log('✓ getUserRole works:', userRole);
-        } catch (error) {
-            console.error('✗ getUserRole failed:', error.message);
-            console.error('Full error:', error);
-        }
-        
-        // Test users mapping
-        try {
-            console.log('Testing users mapping with account:', selectedAccount);
-            const userInfo = await userManagementContract.methods.users(selectedAccount).call();
-            console.log('✓ Users mapping works:', userInfo);
-        } catch (error) {
-            console.error('✗ Users mapping failed:', error.message);
-            console.error('Full error:', error);
-        }
-        
-        // 5. Check if user is registered
-        console.log('\n=== USER REGISTRATION CHECK ===');
-        try {
-            const userInfo = await userManagementContract.methods.users(selectedAccount).call();
-            if (userInfo && userInfo.exists) {
-                console.log('User is registered:', {
-                    username: userInfo.username,
-                    role: userInfo.role,
-                    exists: userInfo.exists
-                });
-            } else {
-                console.log('User is not registered or exists field is false');
-            }
-        } catch (error) {
-            console.error('Could not check user registration:', error.message);
-        }
-        
-    } catch (error) {
-        console.error('Debug function error:', error);
-    }
-}
-
-// Enhanced login function with better error handling
 async function performLogin() {
     const username = document.getElementById('username').value;
     const password = document.getElementById('password').value;
@@ -286,86 +299,59 @@ async function performLogin() {
         messageDiv.textContent = 'Checking credentials...';
         messageDiv.className = 'message';
         
-        // Hash the password
-        const hashedPassword = hashPassword(password);
+        const hashedPassword = web3.utils.keccak256(web3.utils.utf8ToHex(password));
         console.log('Password hash:', hashedPassword);
         
-        // Try login method
-        try {
-            console.log('Calling login method...');
-            const loginResult = await userManagementContract.methods.login(hashedPassword).call({
-                from: selectedAccount
-            });
+        // First check if user exists
+        console.log('Checking if user exists...');
+        const userInfo = await userManagementContract.methods.users(selectedAccount).call();
+        console.log('User info:', userInfo);
+        
+        if (!userInfo.exists) {
+            messageDiv.textContent = 'Account not registered. Please register first.';
+            messageDiv.className = 'message error';
+            return;
+        }
+        
+        // Try login
+        console.log('Attempting login...');
+        const loginResult = await userManagementContract.methods.login(hashedPassword).call({
+            from: selectedAccount
+        });
+        
+        console.log('Login result:', loginResult);
+        
+        const success = loginResult.success || loginResult[0];
+        const userRole = parseInt(loginResult.userRole || loginResult[1]);
+        
+        if (success) {
+            sessionStorage.setItem('userRole', userRole.toString());
+            sessionStorage.setItem('userAddress', selectedAccount);
+            sessionStorage.setItem('username', username);
             
-            console.log('Login result:', loginResult);
+            messageDiv.textContent = 'Login successful! Redirecting...';
+            messageDiv.className = 'message success';
             
-            // Handle different return formats
-            let success, userRole;
-            if (typeof loginResult === 'object' && loginResult !== null) {
-                // If it's an object with named properties
-                success = Boolean(loginResult.success);
-                userRole = parseInt(loginResult.userRole);
-            } else if (Array.isArray(loginResult)) {
-                // If it's an array
-                success = Boolean(loginResult[0]);
-                userRole = parseInt(loginResult[1]);
-            } else {
-                throw new Error('Unexpected login result format');
-            }
-            
-            if (success) {
-                // Store user data
-                sessionStorage.setItem('userRole', userRole.toString());
-                sessionStorage.setItem('userAddress', selectedAccount);
-                sessionStorage.setItem('username', username);
-                
-                messageDiv.textContent = 'Login successful! Redirecting...';
-                messageDiv.className = 'message success';
-                
-                // Redirect based on role
-                setTimeout(() => {
-                    if (userRole === 0) {
-                        window.location.href = '/student.html';
-                    } else if (userRole === 1) {
-                        window.location.href = '/teacher.html';
-                    } else {
-                        console.error('Unknown user role:', userRole);
-                        messageDiv.textContent = 'Unknown user role. Please contact administrator.';
-                        messageDiv.className = 'message error';
-                    }
-                }, 1500);
-                
-            } else {
-                messageDiv.textContent = 'Invalid credentials. Please check your password.';
-                messageDiv.className = 'message error';
-            }
-            
-        } catch (loginError) {
-            console.error('Login method failed:', loginError);
-            
-            // Try alternative approach - check if user exists first
-            try {
-                console.log('Trying alternative approach - checking user existence...');
-                const userInfo = await userManagementContract.methods.users(selectedAccount).call();
-                console.log('User info:', userInfo);
-                
-                if (!userInfo.exists) {
-                    messageDiv.textContent = 'Account not registered. Please register first.';
-                    messageDiv.className = 'message error';
+            setTimeout(() => {
+                if (userRole === 0) {
+                    window.location.href = '/student.html';
+                } else if (userRole === 1) {
+                    window.location.href = '/teacher.html';
                 } else {
-                    messageDiv.textContent = 'Login failed. Please check your password.';
+                    console.error('Unknown user role:', userRole);
+                    messageDiv.textContent = 'Unknown user role. Please contact administrator.';
                     messageDiv.className = 'message error';
                 }
-            } catch (userCheckError) {
-                console.error('User check also failed:', userCheckError);
-                messageDiv.textContent = `Login error: ${loginError.message}`;
-                messageDiv.className = 'message error';
-            }
+            }, 1500);
+            
+        } else {
+            messageDiv.textContent = 'Invalid credentials. Please check your password.';
+            messageDiv.className = 'message error';
         }
         
     } catch (error) {
         console.error('Login process error:', error);
-        messageDiv.textContent = `Error: ${error.message}`;
+        messageDiv.textContent = Login error: ${error.message};
         messageDiv.className = 'message error';
     }
 }
@@ -409,13 +395,8 @@ if (window.ethereum) {
 window.addEventListener('load', async function() {
     console.log('Page loaded, initializing...');
     await checkMetaMaskConnection();
-    
-    // Auto-run debug function for development
-    if (isMetaMaskConnected) {
-        setTimeout(debugContract, 1000);
-    }
-});
+}); 
 
-// Expose debug function globally for console access
-window.debugContract = debugContract;
-window.performLogin = performLogin;
+window.onload = () => {
+    document.getElementById('loginForm').style.display = 'block';
+};

@@ -12,35 +12,27 @@ contract UserManagement {
     }
     
     mapping(address => User) public users;
-    address public owner;
-    
+
     event UserRegistered(address userAddress, string username, Role role);
-    
-    constructor() {
-        owner = msg.sender;
-    }
-    
-    modifier onlyOwner() {
-        require(msg.sender == owner, "Only owner can call this function");
-        _;
-    }
-    
+
+    // Remove owner and onlyOwner since no longer needed for registration
+
     function registerUser(
-        address userAddress,
         string memory username,
         string memory passwordHash,
         Role role
-    ) public onlyOwner {
-        require(!users[userAddress].exists, "User already exists");
+    ) public {
+        require(!users[msg.sender].exists, "User already exists");
+        require(role == Role.Student || role == Role.Teacher, "Invalid role");
 
-        users[userAddress] = User({
+        users[msg.sender] = User({
             username: username,
             passwordHash: passwordHash,
             role: role,
             exists: true
         });
 
-        emit UserRegistered(userAddress, username, role);
+        emit UserRegistered(msg.sender, username, role);
     }
     
     function login(string memory passwordHash) public view returns (bool success, uint8 userRole) {
@@ -55,4 +47,4 @@ contract UserManagement {
         require(users[userAddress].exists, "User does not exist");
         return users[userAddress].role;
     }
-} 
+}

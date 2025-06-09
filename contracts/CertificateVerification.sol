@@ -64,37 +64,40 @@ contract CertificateVerification {
         return string(str);
     }
     
-    function issueCertificate(
+    function issueCertificateForStudent(
+        address student,
+        string memory studentName,
         string memory courseName,
         string memory certificateId,
         uint256 issueDate,
         string memory ipfsHash
-    ) public onlyStudent {
+    ) public onlyTeacher {
         require(certificates[certificateId].issueDate == 0, "Certificate ID already exists");
-        
+
         certificates[certificateId] = Certificate({
-            studentName: addressToString(msg.sender),
+            studentName: studentName,
             courseName: courseName,
             issueDate: issueDate,
             certificateId: certificateId,
             ipfsHash: ipfsHash,
             isVerified: false,
             isRejected: false,
-            studentAddress: msg.sender
+            studentAddress: student
         });
-        
-        studentCertificates[msg.sender].push(certificateId);
+
+        studentCertificates[student].push(certificateId);
         pendingCertificates.push(certificateId);
-        
+
         emit CertificateIssued(
             certificateId,
-            addressToString(msg.sender),
+            studentName,
             courseName,
             issueDate,
             ipfsHash,
-            msg.sender
+            student
         );
     }
+
     
     function verifyCertificate(string memory certificateId, bool isApproved) public onlyTeacher {
         require(certificates[certificateId].issueDate != 0, "Certificate does not exist");
