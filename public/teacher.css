@@ -1,0 +1,135 @@
+/* ===== Base ===== */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+  
+  body {
+    background-color: #f3f4f6;
+    padding: 40px 20px;
+    color: #1f2937;
+  }
+  
+  .main-content {
+    max-width: 900px;
+    margin: 0 auto;
+    background: #fff;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  }
+  
+  h2, h3 {
+    color: #1d4ed8;
+    margin-bottom: 20px;
+  }
+  
+  h3 {
+    margin-top: 40px;
+    font-size: 1.25rem;
+  }
+  
+  /* ===== Form Styling ===== */
+  .form-group {
+    margin-bottom: 20px;
+  }
+  
+  label {
+    font-weight: 600;
+    margin-bottom: 8px;
+    display: block;
+  }
+  
+  input, select {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 1rem;
+    background-color: #f9fafb;
+    transition: border-color 0.3s;
+  }
+  
+  input:focus, select:focus {
+    border-color: #2563eb;
+    outline: none;
+    background-color: #fff;
+  }
+  
+  .btn {
+    background-color: #2563eb;
+    color: #fff;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: background-color 0.3s ease;
+  }
+  
+  .btn:hover {
+    background-color: #1d4ed8;
+  }
+  
+  /* ===== Table Styling ===== */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+    background-color: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  
+  thead {
+    background-color: #f3f4f6;
+  }
+  
+  th, td {
+    padding: 14px;
+    text-align: left;
+    border-bottom: 1px solid #e5e7eb;
+  }
+  
+  th {
+    font-weight: 700;
+  }
+  
+  tbody tr:hover {
+    background-color: #f9fafb;
+  }
+  
+  /* ===== Message Styling ===== */
+  .message {
+    margin-top: 20px;
+    padding: 12px;
+    border-radius: 6px;
+    display: none;
+    font-size: 0.95rem;
+  }
+  
+  .message.success {
+    background-color: #d1fae5;
+    color: #065f46;
+  }
+  
+  .message.error {
+    background-color: #fee2e2;
+    color: #991b1b;
+  }
+  
+  @media (max-width: 600px) {
+    .main-content {
+      padding: 20px;
+    }
+  
+    th, td {
+      font-size: 0.9rem;
+    }
+  }
+  
